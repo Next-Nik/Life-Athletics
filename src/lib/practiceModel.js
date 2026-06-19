@@ -146,6 +146,6 @@ export const MONEY_MOVES = makePractice({
       'Post one thing that builds the audience',
       'Ask for what the work is worth',
     ],
-    line: { prompt: "Tonight, what's true?", placeholder: 'I made all three moves and stayed in the game…' },
+    line: { prompt: "Tonight \u2014 what did you put in motion?", placeholder: 'Made all three and stayed in the game\u2026' },
   },
 })

@@ -1,7 +1,8 @@
-// Today.jsx — the day. The Money Moves card, and the run when you tap it.
+// Today.jsx — the day. White ground, the lockup, the Money Moves card.
 import { useEffect, useState, useCallback } from 'react'
-import { tokens, serif, mono } from '../lib/tokens'
+import { tokens, sans } from '../lib/tokens'
 import { ensureMoneyMoves, loadLog, logRep, setCadence } from '../lib/db'
+import Wordmark from '../components/Wordmark'
 import PracticeCard from '../components/PracticeCard'
 import PracticeRun from '../components/PracticeRun'
 
@@ -40,15 +41,15 @@ export default function Today({ userId }) {
   }
 
   return (
-    <div style={{ maxWidth: 460, margin: '0 auto', padding: '24px 20px 40px' }}>
+    <div style={{ maxWidth: 472, margin: '0 auto', padding: '22px 22px 40px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ ...mono, fontSize: 15, fontWeight: 700, letterSpacing: '0.26em', textTransform: 'uppercase' }}>LIFE <b style={{ color: tokens.cyan }}>ATHLETICS</b></div>
-        <div style={{ ...mono, fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: tokens.ink3 }}>Today</div>
+        <Wordmark font={16} />
+        <div style={{ ...sans, fontWeight: 600, fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: tokens.ink3 }}>Today</div>
       </div>
 
-      <div style={{ marginTop: 26 }}>
-        {err && <p style={{ ...mono, fontSize: 12, color: tokens.gold }}>Couldn’t reach your data: {err}</p>}
-        {!practice && !err && <p style={{ ...serif, color: tokens.ink3, fontSize: 15 }}>Loading the day…</p>}
+      <div style={{ marginTop: 28 }}>
+        {err && <p style={{ fontSize: 13, color: tokens.gold }}>Couldn’t load your day. {err}</p>}
+        {!practice && !err && <p style={{ color: tokens.ink3, fontSize: 15 }}>Lining up today…</p>}
         {practice && !running && (
           <PracticeCard practice={practice} log={log} onRun={() => setRunning(true)} onCadence={onCadence} />
         )}

@@ -143,4 +143,4 @@ export const ENGINES = ['body', 'charge', 'mind']
 
 export const AREA_KEYS = AREAS.map(a => a.key)
 export const areaByKey = key => AREAS.find(a => a.key === key) || null
-export const accentFor = key => (areaByKey(key)?.accent) || '#5FE2EE'
+export const accentFor = key => (areaByKey(key)?.accent) || '#139CDD'

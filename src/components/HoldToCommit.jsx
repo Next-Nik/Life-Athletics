@@ -1,13 +1,7 @@
 // ─────────────────────────────────────────────────────────────
 // HoldToCommit.jsx — the charge ring, as a React component.
-//
-// The press-and-hold primitive lifted out of NextUs WinTheDay, now a
-// component either app can drop in. Press and hold; the ring fills
-// cyan; at full it flips gold, buzzes, and fires onComplete once. The
-// hold IS the commit — there is no tap-to-skip.
-//
-// Props: holdMs, size, onComplete, label (shown above), done (sticky),
-//        bolt (render the bolt glyph inside).
+// Press and hold; the ring fills blue; at full it flips gold, buzzes, and
+// fires onComplete once. The hold IS the commit — no tap-to-skip.
 // ─────────────────────────────────────────────────────────────
 import { useEffect, useRef, useState } from 'react'
 import { tokens } from '../lib/tokens'
@@ -50,7 +44,7 @@ export default function HoldToCommit({
     setF(0)
   }
 
-  const stroke = committed ? tokens.gold : tokens.cyan
+  const stroke = committed ? tokens.gold : tokens.blue
 
   return (
     <div
@@ -67,7 +61,7 @@ export default function HoldToCommit({
       }}
     >
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ transform: 'rotate(-90deg)', overflow: 'visible' }}>
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={tokens.lineStrong} strokeWidth="3" />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(0,0,0,0.10)" strokeWidth="3" />
         <circle
           cx={size / 2} cy={size / 2} r={r} fill="none" stroke={stroke} strokeWidth="3" strokeLinecap="round"
           strokeDasharray={C} strokeDashoffset={C * (1 - f)}
@@ -77,7 +71,7 @@ export default function HoldToCommit({
       {bolt && (
         <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <svg width="32" height="42" viewBox="0 0 24 32" style={{ transform: reduce ? 'none' : `scale(${0.9 + f * 0.35})`, transition: 'transform 0.05s linear' }}>
-            <path d="M13 1 L3 18 L11 18 L9 31 L21 12 L13 12 Z" fill={committed ? tokens.gold : tokens.cyan} opacity={(0.35 + f * 0.6).toFixed(2)} />
+            <path d="M13 1 L3 18 L11 18 L9 31 L21 12 L13 12 Z" fill={committed ? tokens.gold : tokens.blue} opacity={(0.35 + f * 0.6).toFixed(2)} />
           </svg>
         </div>
       )}

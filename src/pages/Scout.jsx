@@ -1,7 +1,8 @@
-// Scout.jsx — the self-scouting report.
+// Scout.jsx — the self-scouting report. White ground, the lockup.
 import { useEffect, useState } from 'react'
-import { tokens, serif, mono } from '../lib/tokens'
+import { tokens, sans, display } from '../lib/tokens'
 import { seedScouting, saveScouting } from '../lib/db'
+import Wordmark from '../components/Wordmark'
 import ScoutingDial from '../components/ScoutingDial'
 
 export default function Scout({ userId }) {
@@ -25,23 +26,22 @@ export default function Scout({ userId }) {
   }
 
   return (
-    <div style={{ maxWidth: 460, margin: '0 auto', padding: '24px 20px 40px' }}>
+    <div style={{ maxWidth: 472, margin: '0 auto', padding: '22px 22px 40px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ ...mono, fontSize: 15, fontWeight: 700, letterSpacing: '0.26em', textTransform: 'uppercase' }}>LIFE <b style={{ color: tokens.cyan }}>ATHLETICS</b></div>
-        <div style={{ ...mono, fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: tokens.ink3 }}>Scouting</div>
+        <Wordmark font={16} />
+        <div style={{ ...sans, fontWeight: 600, fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: tokens.ink3 }}>Scout</div>
       </div>
-      <h1 style={{ ...serif, fontSize: 26, fontWeight: 600, margin: '20px 0 4px' }}>Where you stand.</h1>
-      <p style={{ fontSize: 13.5, color: tokens.ink2, lineHeight: 1.5, marginBottom: 18 }}>
-        Solid web is now, dashed gold is headed. Tap an area, then drag to set it. Nothing moves but by your hand.
+      <h1 style={{ ...display, fontSize: 30, margin: '24px 0 6px', letterSpacing: '-0.01em' }}>Are you winning your game?</h1>
+      <p style={{ fontSize: 14, color: tokens.ink2, lineHeight: 1.5, marginBottom: 20 }}>
+        Nine areas, scouted honestly. The blue web is where you stand now; the dashed gold is where you&rsquo;re headed. Tap an area to read it, drag to move it. Only you move the markers.
       </p>
-      {err && <p style={{ ...mono, fontSize: 12, color: tokens.gold }}>Couldn’t reach your data: {err}</p>}
-      {!scouting && !err && <p style={{ ...serif, color: tokens.ink3, fontSize: 15 }}>Loading the dial…</p>}
+      {err && <p style={{ fontSize: 13, color: tokens.gold }}>Couldn’t load your dial. {err}</p>}
+      {!scouting && !err && <p style={{ color: tokens.ink3, fontSize: 15 }}>Reading your game…</p>}
       {scouting && <ScoutingDial scouting={scouting} onSave={onSave} />}
     </div>
   )
 }
 
-// map the db patch keys back to the local row shape
 function rename(patch) {
   const out = {}
   if (patch.now_value != null) out.now_value = patch.now_value
