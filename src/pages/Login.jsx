@@ -25,7 +25,7 @@ export default function Login() {
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px 20px',
     }}>
       <div style={{ width: '100%', maxWidth: 400, textAlign: 'center' }}>
-        <img src={ASSETS.mark} alt="Life Athletics" width={88} height={88} style={{ display: 'block', margin: '0 auto 22px' }} />
+        <img src={ASSETS.mark} alt="Life Athletics" width={176} height={176} style={{ display: 'block', margin: '0 auto 22px' }} />
         <div style={{ ...eyebrow, fontSize: 11, color: tokens.ink3 }}>The sport of living well</div>
         <h1 style={{ ...display, fontSize: 34, margin: '14px 0 0', lineHeight: 1.06, letterSpacing: '-0.01em' }}>
           Step onto<br />the field.
