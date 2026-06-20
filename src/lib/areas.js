@@ -10,20 +10,18 @@
 //   key       — stable id, never shown (used in the DB area column)
 //   label     — what the user sees
 //   engine    — the three-engine grouping: 'body' | 'charge' | 'mind'
-//               are the engines; everything else is null. (Body/Charge/
-//               Mind are the three engines under the body of work.)
-//   accent    — the area's own accent hex (from the reframe prototype).
-//               When an area paints the ground, this is the glow.
-//   seed      — starter content the area ships with. Everything here is
-//               a suggestion the user can overwrite; nothing is a frame.
+//   accent    — the area's own accent hex
+//   seed      — starter content the area ships with. A suggestion the
+//               user can overwrite; nothing here is a frame.
 //     reframe   — the live-rep script: caught thought, its cost, the switch
 //     read      — the default self-scouting read (the body line)
-//     prescribe — the default "train the gap" prescription verb +
-//                 line: Install (name one rep a day), Reps (active
-//                 training), or Maintain (protect the floor)
-//
-// The order here is the canonical area order (Purpose first, then the
-// two games, then the three engines, then Work / Money / Relationships).
+//     prescribe — the default "train the gap" prescription verb + line
+//     practices — the two starter practices: the doing (kind:'doing',
+//                 surfaces in the morning) and the sustaining
+//                 (kind:'sustaining', surfaces in the evening). They are
+//                 seeded inactive — the user switches on what they train.
+//                 Money's doing is the owned Money Moves practice, so it
+//                 isn't listed here; only its sustaining is.
 // ─────────────────────────────────────────────────────────────
 
 export const AREAS = [
@@ -35,8 +33,12 @@ export const AREAS = [
         cost:    'keeps your game unnamed and your days on autopilot.',
         reframe: "What's the first move that's actually mine?",
       },
-      read: "Can't yet name what you're playing for.",
+      read: "Not sure yet what you're working toward.",
       prescribe: { verb: 'Install', line: 'name one rep a day that\'s yours' },
+      practices: [
+        { kind: 'doing',      label: 'Take one step that\'s yours', entrance: 'morning', cadence: 'daily' },
+        { kind: 'sustaining', label: 'Write a line on what mattered', entrance: 'evening', cadence: 'daily' },
+      ],
     },
   },
   {
@@ -47,8 +49,13 @@ export const AREAS = [
         cost:    'judges you instead of steadying you.',
         reframe: "What's actually happening right now?",
       },
-      read: 'Anxiety runs the open. Reactive most mornings.',
+      read: 'Anxious most mornings. Reacting more than choosing.',
       prescribe: { verb: 'Reps', line: 'a downshift before the day starts' },
+      practices: [
+        { kind: 'doing',      label: 'A short reset before the day', entrance: 'morning', cadence: 'daily' },
+        { kind: 'sustaining', label: 'Name the feeling, name what\'s real', entrance: 'evening', cadence: 'daily' },
+        { kind: 'sustaining', label: 'Breathe with me', entrance: 'anytime', cadence: 'daily', runMode: 'intervals', config: { breath: 'pacer' } },
+      ],
     },
   },
   {
@@ -59,8 +66,12 @@ export const AREAS = [
         cost:    "pulls you out of the room before you've arrived.",
         reframe: 'Who can I be fully present with right now?',
       },
-      read: 'Reads a room. Presents clean.',
+      read: 'Comfortable with people. Reads a room well.',
       prescribe: { verb: 'Maintain', line: 'hold it, light touch' },
+      practices: [
+        { kind: 'doing',      label: 'Show up fully in one moment', entrance: 'morning', cadence: 'daily' },
+        { kind: 'sustaining', label: 'Notice how you came across', entrance: 'evening', cadence: 'daily' },
+      ],
     },
   },
   {
@@ -71,8 +82,12 @@ export const AREAS = [
         cost:    'skips the rep entirely, so nothing compounds.',
         reframe: "What's the smallest rep I do have time for?",
       },
-      read: 'Trains three times a week. Sleep is okay.',
+      read: 'Active a few times a week. Sleep is okay.',
       prescribe: { verb: 'Reps', line: 'spread across strength, mobility, endurance' },
+      practices: [
+        { kind: 'doing',      label: 'Move with real effort', entrance: 'morning', cadence: '3x', runMode: 'timer', config: { minutes: 30 } },
+        { kind: 'sustaining', label: 'Rest and refuel', entrance: 'evening', cadence: 'daily' },
+      ],
     },
   },
   {
@@ -83,8 +98,14 @@ export const AREAS = [
         cost:    "burns the reserve you're already running on.",
         reframe: 'What does resting make possible tomorrow?',
       },
-      read: 'Never really rests. Scrolls instead. Fried by Friday.',
+      read: 'Rarely truly rests. Worn out by the weekend.',
       prescribe: { verb: 'Install', line: 'one real downshift a day' },
+      practices: [
+        { kind: 'doing',      label: 'Do one thing that fills you', entrance: 'morning', cadence: 'daily' },
+        { kind: 'sustaining', label: 'Wind down without a screen', entrance: 'evening', cadence: 'daily' },
+        { kind: 'doing',      label: 'Energy breath', entrance: 'morning', cadence: 'daily', runMode: 'intervals', config: { breath: 'charge', rounds: 3, workSeconds: 20, restSeconds: 10 } },
+        { kind: 'sustaining', label: 'Settle breath', entrance: 'evening', cadence: 'daily', runMode: 'intervals', config: { breath: 'open', rounds: 3 } },
+      ],
     },
   },
   {
@@ -95,8 +116,12 @@ export const AREAS = [
         cost:    "closes the door before you've tried the first page.",
         reframe: "What's the next small thing I can learn?",
       },
-      read: 'Curious, but learning is incidental, not trained.',
+      read: 'Curious, but scattered. Little deep focus.',
       prescribe: { verb: 'Reps', line: 'a deliberate block of focused learning' },
+      practices: [
+        { kind: 'doing',      label: 'Twenty focused minutes', entrance: 'morning', cadence: 'weekdays' },
+        { kind: 'sustaining', label: 'Put it down and let it settle', entrance: 'evening', cadence: 'daily' },
+      ],
     },
   },
   {
@@ -107,8 +132,12 @@ export const AREAS = [
         cost:    'freezes you before the first real move.',
         reframe: "What's one piece I can do well right now?",
       },
-      read: 'Competent, respected. Not stretched.',
+      read: 'Capable and respected. Not stretched.',
       prescribe: { verb: 'Maintain', line: 'coast and watch' },
+      practices: [
+        { kind: 'doing',      label: 'One block of deep work', entrance: 'morning', cadence: 'weekdays' },
+        { kind: 'sustaining', label: 'Close the loop, leave it clean', entrance: 'evening', cadence: 'weekdays' },
+      ],
     },
   },
   {
@@ -119,8 +148,13 @@ export const AREAS = [
         cost:    'ends the search before it ever starts.',
         reframe: 'How could I afford it?',
       },
-      read: 'Earns fine. No system. Nothing invested.',
+      read: 'Earning fine. No system. Nothing put away.',
       prescribe: { verb: 'Reps', line: 'one money move a week' },
+      // The doing practice for Money is the owned Money Moves (seeded
+      // separately, active). Only the sustaining is listed here.
+      practices: [
+        { kind: 'sustaining', label: 'Track one thing, plug one leak', entrance: 'evening', cadence: 'daily' },
+      ],
     },
   },
   {
@@ -131,16 +165,20 @@ export const AREAS = [
         cost:    'stops you reaching out, and the distance grows.',
         reframe: "What's one bid I could make today?",
       },
-      read: 'Close partner. Real friends.',
+      read: 'Close to a few people who matter.',
       prescribe: { verb: 'Maintain', line: 'keep showing up' },
+      practices: [
+        { kind: 'doing',      label: 'Reach out to someone who matters', entrance: 'morning', cadence: 'daily' },
+        { kind: 'sustaining', label: 'Repair or appreciate one thing', entrance: 'evening', cadence: 'daily' },
+      ],
     },
   },
 ]
 
-// The three engines, named — used for the "body of work" grouping in
-// the scouting view. Everything else stands on its own.
+// The three engines, named — used for the "body of work" grouping.
 export const ENGINES = ['body', 'charge', 'mind']
 
 export const AREA_KEYS = AREAS.map(a => a.key)
 export const areaByKey = key => AREAS.find(a => a.key === key) || null
+export const areaLabel = key => (areaByKey(key)?.label) || key
 export const accentFor = key => (areaByKey(key)?.accent) || '#139CDD'

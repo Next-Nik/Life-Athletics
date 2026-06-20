@@ -1,10 +1,11 @@
-// Nav.jsx — the two rooms, bottom rail. White, blurred, hairline top.
+// Nav.jsx — the three rooms, bottom rail. White, blurred, hairline top.
 import { NavLink } from 'react-router-dom'
 import { tokens, sans } from '../lib/tokens'
 
 const items = [
   { to: '/', label: 'Today', end: true },
-  { to: '/scout', label: 'Scout', end: false },
+  { to: '/scout', label: 'You', end: false },
+  { to: '/progress', label: 'Progress', end: false },
 ]
 
 export default function Nav() {
