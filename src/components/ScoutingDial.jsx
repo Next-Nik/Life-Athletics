@@ -9,7 +9,7 @@ import { useMemo, useRef, useState } from 'react'
 import { tokens, sans, display, eyebrow, ASSETS } from '../lib/tokens'
 import { AREAS } from '../lib/areas'
 import { GRADES, gradeIndex, gradeColor, gradeLabel, bandPos, gapLabel } from '../lib/scoring'
-import AreaPractices from './AreaPractices'
+import TrainingTool from './TrainingTool'
 
 const cx = 160, cy = 160, r0 = 44, r1 = 140, labelR = 160
 const N = AREAS.length
@@ -26,7 +26,7 @@ const SHAPES = [
 const KIND_FIELD = { now: 'now_value', target: 'target_value', horizon: 'horizon_value' }
 const KIND_LABEL = { now: 'Now', target: 'This quarter', horizon: 'Someday' }
 
-export default function ScoutingDial({ scouting, onSave, practices = [], onToggle, onAdd }) {
+export default function ScoutingDial({ scouting, onSave, practices = [], logsBy = {}, onToggle, onCadence, onSaveSteps, onRun, onLog, onAdd }) {
   const rows = useMemo(() => AREAS.map(a => {
     const s = scouting.find(r => r.area === a.key) || {}
     return {
@@ -204,9 +204,20 @@ export default function ScoutingDial({ scouting, onSave, practices = [], onToggl
           </div>
         </div>
 
-        {/* the bridge: this area's practices */}
+        {/* the bridge: this area's training tool */}
         {onToggle && (
-          <AreaPractices areaKey={cur.key} practices={practices} onToggle={onToggle} onAdd={onAdd} />
+          <TrainingTool
+            key={cur.key}
+            areaKey={cur.key}
+            practices={practices}
+            logsBy={logsBy}
+            onToggle={onToggle}
+            onCadence={onCadence}
+            onSaveSteps={onSaveSteps}
+            onRun={onRun}
+            onLog={onLog}
+            onAdd={onAdd}
+          />
         )}
       </div>
     </div>

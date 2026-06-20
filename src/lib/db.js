@@ -113,6 +113,11 @@ export async function createPractice(userId, { area, label, entrance = 'anytime'
   return data
 }
 
+export async function saveConfig(practiceId, config) {
+  const { error } = await supabase.from('la_practices').update({ config }).eq('id', practiceId)
+  if (error) throw error
+}
+
 // ── the rep log ─────────────────────────────────────────────────
 export async function loadLog(userId, practiceId, sinceDays = 60) {
   const since = new Date(); since.setDate(since.getDate() - sinceDays)

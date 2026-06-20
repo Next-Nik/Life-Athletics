@@ -15,7 +15,6 @@ import Onboarding from './components/Onboarding'
 import Today from './pages/Today'
 import Scout from './pages/Scout'
 import Progress from './pages/Progress'
-import Login from './pages/Login'
 
 function Centered({ children }) {
   return (
@@ -56,7 +55,7 @@ function Authed({ userId }) {
 }
 
 export default function App() {
-  const { user, loading } = useSession()
+  const { user, loading, authError } = useSession()
 
   if (!supabaseConfigured) {
     return (
@@ -71,7 +70,20 @@ export default function App() {
   if (loading) {
     return <Centered><p style={{ color: tokens.ink3, fontSize: 15 }}>Lining you up&hellip;</p></Centered>
   }
-  if (!user) return <Login />
+  if (authError) {
+    return (
+      <Centered>
+        <Wordmark mark={false} font={15} />
+        <p style={{ fontSize: 14.5, color: tokens.ink2, lineHeight: 1.55, marginTop: 18 }}>
+          Couldn&rsquo;t start a session. Turn on <b style={{ color: tokens.ink }}>Anonymous sign-ins</b> in Supabase under Authentication → Providers, then refresh.
+        </p>
+        <p style={{ fontSize: 12.5, color: tokens.ink3, marginTop: 12 }}>{authError}</p>
+      </Centered>
+    )
+  }
+  if (!user) {
+    return <Centered><p style={{ color: tokens.ink3, fontSize: 15 }}>Lining you up&hellip;</p></Centered>
+  }
 
   return <Authed userId={user.id} />
 }
