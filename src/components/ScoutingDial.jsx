@@ -8,7 +8,7 @@
 import { useMemo, useRef, useState } from 'react'
 import { tokens, sans, display, eyebrow, ASSETS } from '../lib/tokens'
 import { AREAS } from '../lib/areas'
-import { GRADES, gradeIndex, gradeColor, gradeLabel, bandPos, gapLabel } from '../lib/scoring'
+import { score10, scoreColor, gapLabel } from '../lib/scoring'
 import TrainingTool from './TrainingTool'
 
 const cx = 160, cy = 160, r0 = 44, r1 = 140, labelR = 160
@@ -17,12 +17,6 @@ const ang = i => (-90 + i * (360 / N)) * Math.PI / 180
 const rad = p => r0 + p * (r1 - r0)
 const pt = (p, i) => ({ x: cx + rad(p) * Math.cos(ang(i)), y: cy + rad(p) * Math.sin(ang(i)) })
 
-const SHAPES = [
-  { key: 'generalist', label: 'Generalist' },
-  { key: 'specialist', label: 'Specialist' },
-  { key: 'foundation', label: 'Foundation' },
-  { key: 'custom',     label: 'Custom' },
-]
 const KIND_FIELD = { now: 'now_value', target: 'target_value', horizon: 'horizon_value' }
 const KIND_LABEL = { now: 'Now', target: 'This quarter', horizon: 'Someday' }
 
@@ -33,15 +27,15 @@ export default function ScoutingDial({ scouting, onSave, practices = [], logsBy 
       key: a.key, label: a.label,
       now: s.now_value ?? 0, target: s.target_value ?? 0, horizon: s.horizon_value ?? 0,
       read: s.read_note ?? a.seed.read,
-      prescribe: s.prescribe ?? `${a.seed.prescribe.verb} · ${a.seed.prescribe.line}`,
-      standard: s.standard ?? '', shape: s.shape ?? 'generalist',
+      standard: s.standard ?? '',
     }
   }), [scouting])
 
-  const [sel, setSel] = useState(Math.max(0, rows.findIndex(r => r.key === 'money')))
+  const [sel, setSel] = useState(0)
   const [nh, setNh] = useState('now')
   const [drag, setDrag] = useState({})
   const [stdDraft, setStdDraft] = useState(null)
+  const [readDraft, setReadDraft] = useState(null)
 
   const valOf = (key, kind) => drag[`${key}:${kind}`] ?? rows.find(r => r.key === key)[kind]
 
@@ -60,7 +54,8 @@ export default function ScoutingDial({ scouting, onSave, practices = [], logsBy 
   function rampVal(e) {
     const r = rampRef.current.getBoundingClientRect()
     const x = e.touches ? e.touches[0].clientX : e.clientX
-    return Math.max(0, Math.min(1, (x - r.left) / r.width))
+    const raw = Math.max(0, Math.min(1, (x - r.left) / r.width))
+    return Math.round(raw * 10) / 10 // snap to whole 0–10 points
   }
   function applyDrag(v) { setDrag(d => ({ ...d, [`${cur.key}:${nh}`]: v })) }
   function commit() { onSave?.(cur.key, { [KIND_FIELD[nh]]: valOf(cur.key, nh) }) }
@@ -79,8 +74,6 @@ export default function ScoutingDial({ scouting, onSave, practices = [], logsBy 
   }
   function onMove(e) { if (dragging.current) applyDrag(rampVal(e)) }
   function onUp() { if (dragging.current) { dragging.current = false; commit() } }
-
-  const gi = gradeIndex(nowV)
 
   return (
     <div>
@@ -103,14 +96,14 @@ export default function ScoutingDial({ scouting, onSave, practices = [], logsBy 
             const lx = cx + labelR * cos, ly = cy + labelR * sin
             const anchor = cos > 0.34 ? 'start' : cos < -0.34 ? 'end' : 'middle'
             const dy = Math.abs(cos) <= 0.34 ? (sin < 0 ? -5 : 13) : 0
-            const c = gradeColor(valOf(r.key, 'now'))
+            const c = scoreColor(valOf(r.key, 'now'))
             return (
               <g key={r.key} onClick={() => setSel(i)} style={{ cursor: 'pointer' }}>
                 <circle cx={tp.x} cy={tp.y} r="3.4" fill="#fff" stroke={tokens.gold} strokeWidth="2.2" />
                 <circle cx={p.x} cy={p.y} r="4.6" fill={c} stroke="#fff" strokeWidth="1.3" />
                 {i === sel && <circle cx={p.x} cy={p.y} r="9" fill="none" stroke={tokens.blue} strokeOpacity="0.7" strokeWidth="1.6" />}
                 <text x={lx} y={ly + dy} textAnchor={anchor} style={{ ...sans, fontSize: 13.5, fontWeight: 600, fill: tokens.ink }}>{r.label}</text>
-                <text x={lx} y={ly + dy + 13} textAnchor={anchor} style={{ ...sans, fontSize: 10.5, fontWeight: 700, fill: c }}>{gradeLabel(valOf(r.key, 'now'))}</text>
+                <text x={lx} y={ly + dy + 13} textAnchor={anchor} style={{ ...sans, fontSize: 11, fontWeight: 700, fill: c }}>{score10(valOf(r.key, 'now'))}</text>
               </g>
             )
           })}
@@ -132,8 +125,8 @@ export default function ScoutingDial({ scouting, onSave, practices = [], logsBy 
       <div style={{ marginTop: 16, border: `1px solid ${tokens.lineSoft}`, borderRadius: 22, background: tokens.panel, boxShadow: tokens.shadow, padding: '22px 24px' }}>
         <h2 style={{ ...display, fontSize: 30, margin: 0, lineHeight: 1.05, letterSpacing: '-0.01em' }}>{cur.label}</h2>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 9, marginTop: 12, border: `1px solid ${tokens.line}`, borderRadius: 999, padding: '6px 14px', ...sans, fontSize: 12, fontWeight: 600, letterSpacing: '0.04em', color: tokens.ink }}>
-          <span style={{ width: 10, height: 10, borderRadius: '50%', background: gradeColor(nowV) }} />
-          {gradeLabel(nowV)}
+          <span style={{ width: 10, height: 10, borderRadius: '50%', background: scoreColor(nowV) }} />
+          {score10(nowV)} / 10
         </span>
 
         {/* ramp */}
@@ -156,10 +149,12 @@ export default function ScoutingDial({ scouting, onSave, practices = [], logsBy 
           </div>
           <svg ref={rampRef} viewBox="0 0 520 120" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}
             style={{ display: 'block', width: '100%', height: 'auto', cursor: 'ew-resize', touchAction: 'none' }}>
-            <path d="M0,100 L0,74 C175,66 350,36 520,28 L520,100 Z" fill={`${gradeColor(nowV)}1A`} stroke={gradeColor(nowV)} strokeOpacity="0.5" strokeWidth="1" />
+            <path d="M0,100 L0,74 C175,66 350,36 520,28 L520,100 Z" fill={scoreColor(nowV)} fillOpacity="0.1" stroke={scoreColor(nowV)} strokeOpacity="0.5" strokeWidth="1" />
             {[130, 260, 390].map(x => <line key={x} x1={x} y1="24" x2={x} y2="104" stroke="rgba(0,0,0,0.10)" strokeWidth="1" />)}
             <line x1="0" y1="100" x2="520" y2="100" stroke="rgba(0,0,0,0.18)" strokeWidth="1" />
-            {GRADES.map((g, k) => <text key={g} x={65 + k * 130} y="90" textAnchor="middle" style={{ ...sans, fontSize: 12.5, fontWeight: 600, letterSpacing: '0.01em', fill: k === gi ? gradeColor(nowV) : tokens.ink3 }}>{g}</text>)}
+            <text x="6" y="90" textAnchor="start" style={{ ...sans, fontSize: 12.5, fontWeight: 600, fill: tokens.ink3 }}>0</text>
+            <text x="260" y="90" textAnchor="middle" style={{ ...sans, fontSize: 12.5, fontWeight: 600, fill: tokens.ink3 }}>5</text>
+            <text x="514" y="90" textAnchor="end" style={{ ...sans, fontSize: 12.5, fontWeight: 600, fill: tokens.ink3 }}>10</text>
             {/* someday (faint) */}
             <line x1={horV * W} y1="30" x2={horV * W} y2="104" stroke={tokens.gold} strokeOpacity="0.45" strokeWidth="1.4" strokeDasharray="2 4" />
             <circle cx={horV * W} cy="26" r="4" fill="none" stroke={tokens.gold} strokeOpacity="0.55" strokeWidth="1.5" />
@@ -170,13 +165,25 @@ export default function ScoutingDial({ scouting, onSave, practices = [], logsBy 
             <line x1={nowV * W} y1="22" x2={nowV * W} y2="106" stroke={tokens.blue} strokeWidth="2.8" />
           </svg>
           <p style={{ fontSize: 14, color: tokens.ink2, marginTop: 12 }}>
-            Now <b style={{ color: gradeColor(nowV) }}>{gradeLabel(nowV)}, {bandPos(nowV)}</b>
-            &nbsp;→&nbsp; This quarter <b style={{ color: tokens.gold }}>{gradeLabel(tgtV)}</b>
+            Now <b style={{ color: scoreColor(nowV) }}>{score10(nowV)}</b>
+            &nbsp;→&nbsp; This quarter <b style={{ color: tokens.gold }}>{score10(tgtV)}</b>
             &nbsp;· <span style={{ color: tokens.gold }}>{gapLabel(nowV, tgtV)}</span>
           </p>
         </div>
 
-        <p style={{ fontSize: 16, lineHeight: 1.5, color: tokens.ink, marginTop: 18 }}>{cur.read}</p>
+        {/* the read — yours to write */}
+        <div style={{ marginTop: 18 }}>
+          <div style={{ ...eyebrow, fontSize: 11, color: tokens.ink3, marginBottom: 9 }}>The read</div>
+          <textarea
+            value={readDraft != null ? readDraft : cur.read}
+            onChange={e => setReadDraft(e.target.value)}
+            onFocus={() => setReadDraft(cur.read)}
+            onBlur={() => { if (readDraft != null && readDraft !== cur.read) onSave?.(cur.key, { read_note: readDraft }); setReadDraft(null) }}
+            placeholder="Where's this at right now? In your words."
+            rows={2}
+            style={{ width: '100%', ...sans, fontSize: 15, lineHeight: 1.5, color: tokens.ink, background: tokens.bg, border: `1px solid ${tokens.line}`, borderRadius: 12, padding: '12px 14px', outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
+          />
+        </div>
 
         {/* the standard */}
         <div style={{ marginTop: 18, paddingTop: 16, borderTop: `1px solid ${tokens.lineSoft}` }}>
@@ -190,18 +197,6 @@ export default function ScoutingDial({ scouting, onSave, practices = [], logsBy 
             rows={2}
             style={{ width: '100%', ...sans, fontSize: 15, lineHeight: 1.5, color: tokens.ink, background: tokens.bg, border: `1px solid ${tokens.line}`, borderRadius: 12, padding: '12px 14px', outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
           />
-          <div style={{ display: 'flex', gap: 7, flexWrap: 'wrap', marginTop: 10 }}>
-            {SHAPES.map(s => {
-              const on = cur.shape === s.key
-              return (
-                <button key={s.key} onClick={() => onSave?.(cur.key, { shape: s.key })} style={{
-                  ...sans, fontSize: 12.5, cursor: 'pointer', borderRadius: 999, padding: '7px 14px',
-                  color: on ? '#fff' : tokens.ink2, background: on ? tokens.ink : 'transparent',
-                  border: `1px solid ${on ? tokens.ink : tokens.line}`, fontWeight: on ? 600 : 500,
-                }}>{s.label}</button>
-              )
-            })}
-          </div>
         </div>
 
         {/* the bridge: this area's training tool */}

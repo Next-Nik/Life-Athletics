@@ -91,7 +91,7 @@ export default function Scout({ userId }) {
       </div>
       <h1 style={{ ...display, fontSize: 30, margin: '24px 0 6px', letterSpacing: '-0.01em' }}>Where things stand</h1>
       <p style={{ fontSize: 14, color: tokens.ink2, lineHeight: 1.5, marginBottom: 20 }}>
-        Nine parts of your life, at a glance. Blue is where you are, gold is where you want to be. Tap any area to read it, set the markers, and train its shapes.
+        Nine parts of your life, at a glance. Blue is where you are, gold is where you want to be. Tap any area to read it, set the markers, and train its practices.
       </p>
       {err && <p style={{ fontSize: 13, color: tokens.gold }}>Something went wrong. {err}</p>}
       {!scouting && !err && <p style={{ color: tokens.ink3, fontSize: 15 }}>Reading your game…</p>}

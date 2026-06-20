@@ -6,9 +6,9 @@
 // the enforcing, we just pass the rows.
 //
 //   ── practices ──
-//   ensureMoneyMoves — the one owned practice (Money's doing rep).
+//   ensureMoneyMoves — retire Money Moves (it is not a settled tool yet).
 //   seedPractices    — lay down the starter practices for every area the
-//                      first time, inactive; ensure Money Moves active.
+//                      first time, inactive.
 //   loadPractices    — all of a user's practices, ordered for the day.
 //   setActive        — the composer's on/off.
 //   setCadence       — change a practice's cadence.

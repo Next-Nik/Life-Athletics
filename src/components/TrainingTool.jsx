@@ -32,7 +32,7 @@ export default function TrainingTool({ areaKey, practices, logsBy = {}, onToggle
   return (
     <div style={{ marginTop: 18, paddingTop: 16, borderTop: `1px solid ${tokens.lineSoft}` }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12 }}>
-        <span style={{ ...eyebrow, fontSize: 11, color: tokens.ink3 }}>Your shapes</span>
+        <span style={{ ...eyebrow, fontSize: 11, color: tokens.ink3 }}>Your practices</span>
         <span style={{ ...sans, fontSize: 12, color: tokens.ink3 }}>{items.filter(p => p.active).length} of {items.length} on</span>
       </div>
 
@@ -58,7 +58,7 @@ export default function TrainingTool({ areaKey, practices, logsBy = {}, onToggle
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ ...sans, fontSize: 16, fontWeight: 600, color: tokens.ink }}>{p.label}</div>
                 <div style={{ ...sans, fontSize: 12, color: tokens.ink3, marginTop: 3 }}>
-                  {cadenceLabel(p.cadence)} · <span style={{ color: ACTIVE }}>{cur}-day streak</span>{p.source === 'owned' || runner ? ' · runs a tool' : ''}
+                  {cadenceLabel(p.cadence)} · <span style={{ color: ACTIVE }}>{cur}-day streak</span>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
@@ -93,12 +93,12 @@ export default function TrainingTool({ areaKey, practices, logsBy = {}, onToggle
                     </div>
                   ))}
                   <button onClick={() => setSteps(p, [...getSteps(p), ''])} style={{ marginTop: 12, background: 'none', border: 0, color: tokens.ink3, ...sans, fontSize: 14, cursor: 'pointer' }}>+ add a step</button>
-                  <div style={{ ...sans, fontSize: 12.5, color: tokens.ink3, marginTop: 7, fontStyle: 'italic' }}>These are yours. We hold the shape, you fill it.</div>
+                  <div style={{ ...sans, fontSize: 12.5, color: tokens.ink3, marginTop: 7, fontStyle: 'italic' }}>These are yours. We hold the structure, you fill it.</div>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 22, flexWrap: 'wrap' }}>
                   {runner ? (
-                    <button onClick={() => onRun?.(p)} style={logBtn(false)}>{today ? 'Run again' : 'Run the shape'}</button>
+                    <button onClick={() => onRun?.(p)} style={logBtn(false)}>{today ? 'Again' : 'Run'}</button>
                   ) : (
                     <button onClick={today ? undefined : () => onLog?.(p)} disabled={today} style={logBtn(today)}>{today ? 'Logged today ✓' : "Log today's rep"}</button>
                   )}
@@ -125,10 +125,10 @@ export default function TrainingTool({ areaKey, practices, logsBy = {}, onToggle
       })}
 
       {!adding ? (
-        <button onClick={() => setAdding(true)} style={{ width: '100%', border: `1px dashed ${tokens.line}`, borderRadius: 15, background: 'transparent', color: tokens.ink2, ...sans, fontSize: 15, padding: 16, cursor: 'pointer', marginTop: 2 }}>+ Add your own shape</button>
+        <button onClick={() => setAdding(true)} style={{ width: '100%', border: `1px dashed ${tokens.line}`, borderRadius: 15, background: 'transparent', color: tokens.ink2, ...sans, fontSize: 15, padding: 16, cursor: 'pointer', marginTop: 2 }}>+ Add your own</button>
       ) : (
         <div style={{ border: `1px solid ${tokens.lineSoft}`, borderRadius: 15, background: tokens.bg2, padding: 18 }}>
-          <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="Name your shape" autoFocus
+          <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="Name your practice" autoFocus
             style={{ width: '100%', ...sans, fontSize: 18, fontWeight: 600, color: tokens.ink, background: 'transparent', border: 0, borderBottom: `1px solid ${tokens.line}`, padding: '6px 0 10px', outline: 'none', boxSizing: 'border-box' }} />
           <div style={{ display: 'flex', gap: 7, flexWrap: 'wrap', marginTop: 16 }}>
             {CADENCES.map(c => {
@@ -138,7 +138,7 @@ export default function TrainingTool({ areaKey, practices, logsBy = {}, onToggle
           </div>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginTop: 16 }}>
             <button onClick={() => { const n = newName.trim() || 'New shape'; onAdd?.(areaKey, n, newCad); setNewName(''); setNewCad('daily'); setAdding(false) }}
-              style={{ ...sans, fontSize: 14, fontWeight: 600, color: '#fff', background: ACTIVE, border: 0, borderRadius: 9, padding: '9px 18px', cursor: 'pointer' }}>Add shape</button>
+              style={{ ...sans, fontSize: 14, fontWeight: 600, color: '#fff', background: ACTIVE, border: 0, borderRadius: 9, padding: '9px 18px', cursor: 'pointer' }}>Add practice</button>
             <button onClick={() => { setAdding(false); setNewName(''); setNewCad('daily') }} style={{ ...sans, fontSize: 14, color: tokens.ink3, background: 'none', border: 0, cursor: 'pointer' }}>Cancel</button>
           </div>
         </div>

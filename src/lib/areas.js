@@ -33,7 +33,7 @@ export const AREAS = [
         cost:    'keeps your game unnamed and your days on autopilot.',
         reframe: "What's the first move that's actually mine?",
       },
-      read: "Not sure yet what you're working toward.",
+      read: '',
       prescribe: { verb: 'Install', line: 'name one rep a day that\'s yours' },
       practices: [
         { kind: 'doing',      label: 'Take one step that\'s yours', entrance: 'morning', cadence: 'daily' },
@@ -49,7 +49,7 @@ export const AREAS = [
         cost:    'judges you instead of steadying you.',
         reframe: "What's actually happening right now?",
       },
-      read: 'Anxious most mornings. Reacting more than choosing.',
+      read: '',
       prescribe: { verb: 'Reps', line: 'a downshift before the day starts' },
       practices: [
         { kind: 'doing',      label: 'A short reset before the day', entrance: 'morning', cadence: 'daily' },
@@ -66,7 +66,7 @@ export const AREAS = [
         cost:    "pulls you out of the room before you've arrived.",
         reframe: 'Who can I be fully present with right now?',
       },
-      read: 'Comfortable with people. Reads a room well.',
+      read: '',
       prescribe: { verb: 'Maintain', line: 'hold it, light touch' },
       practices: [
         { kind: 'doing',      label: 'Show up fully in one moment', entrance: 'morning', cadence: 'daily' },
@@ -82,7 +82,7 @@ export const AREAS = [
         cost:    'skips the rep entirely, so nothing compounds.',
         reframe: "What's the smallest rep I do have time for?",
       },
-      read: 'Active a few times a week. Sleep is okay.',
+      read: '',
       prescribe: { verb: 'Reps', line: 'spread across strength, mobility, endurance' },
       practices: [
         { kind: 'doing',      label: 'Move with real effort', entrance: 'morning', cadence: '3x', runMode: 'timer', config: { minutes: 30 } },
@@ -98,7 +98,7 @@ export const AREAS = [
         cost:    "burns the reserve you're already running on.",
         reframe: 'What does resting make possible tomorrow?',
       },
-      read: 'Rarely truly rests. Worn out by the weekend.',
+      read: '',
       prescribe: { verb: 'Install', line: 'one real downshift a day' },
       practices: [
         { kind: 'doing',      label: 'Do one thing that fills you', entrance: 'morning', cadence: 'daily' },
@@ -116,7 +116,7 @@ export const AREAS = [
         cost:    "closes the door before you've tried the first page.",
         reframe: "What's the next small thing I can learn?",
       },
-      read: 'Curious, but scattered. Little deep focus.',
+      read: '',
       prescribe: { verb: 'Reps', line: 'a deliberate block of focused learning' },
       practices: [
         { kind: 'doing',      label: 'Twenty focused minutes', entrance: 'morning', cadence: 'weekdays' },
@@ -132,7 +132,7 @@ export const AREAS = [
         cost:    'freezes you before the first real move.',
         reframe: "What's one piece I can do well right now?",
       },
-      read: 'Capable and respected. Not stretched.',
+      read: '',
       prescribe: { verb: 'Maintain', line: 'coast and watch' },
       practices: [
         { kind: 'doing',      label: 'One block of deep work', entrance: 'morning', cadence: 'weekdays' },
@@ -148,7 +148,7 @@ export const AREAS = [
         cost:    'ends the search before it ever starts.',
         reframe: 'How could I afford it?',
       },
-      read: 'Earning fine. No system. Nothing put away.',
+      read: '',
       prescribe: { verb: 'Reps', line: 'one money move a week' },
       // The doing practice for Money is the owned Money Moves (seeded
       // separately, active). Only the sustaining is listed here.
@@ -165,7 +165,7 @@ export const AREAS = [
         cost:    'stops you reaching out, and the distance grows.',
         reframe: "What's one bid I could make today?",
       },
-      read: 'Close to a few people who matter.',
+      read: '',
       prescribe: { verb: 'Maintain', line: 'keep showing up' },
       practices: [
         { kind: 'doing',      label: 'Reach out to someone who matters', entrance: 'morning', cadence: 'daily' },

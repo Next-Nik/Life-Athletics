@@ -3,14 +3,8 @@
 //
 // Two axes, kept apart on purpose:
 //
-//   QUALITY — where an area stands. Off → Building → Solid → Strong.
-//             A continuous 0..1 now-value lands in one of four bands.
-//             The user sets this by dragging the marker in the
-//             self-scouting report. The SYSTEM NEVER MOVES IT. There is
-//             no auto-promotion, no audit on adjustment. The target is
-//             freely adjustable anytime; we trust the user entirely.
-//             These functions only *read* a value into a band — they
-//             never decide one.
+//   QUALITY — where an area stands, on a 0–10 self-rating the user
+//             sets by dragging the marker. The SYSTEM NEVER MOVES IT.
 //
 //   TIME    — how reps roll up. Rep → Match → Series → Quarter → Title.
 //             Rep: one possession (one logged run).
@@ -25,36 +19,26 @@
 // rollups are derived from la_practice_log rows at read time.
 // ─────────────────────────────────────────────────────────────
 
-import { STANDING } from './tokens'
 
-// ── QUALITY: the four-grade scale ───────────────────────────────
-export const GRADES = ['Off', 'Building', 'Solid', 'Strong']
-export const GRADE_KEYS = ['off', 'building', 'solid', 'strong']
-const BOUNDS = [0, 0.25, 0.5, 0.75] // lower edge of each band
+// ── QUALITY: a 0–10 self-scouting scale ─────────────────────────
+// The stored value is a 0..1 position (where the marker sits on the
+// ramp). We read it as a 0–10 score for display. 0 isn't a verdict,
+// it's a starting line. The user owns it; the system never moves it.
+export function score10(v) { return Math.round((v ?? 0) * 10) }
 
-export function gradeIndex(v) {
-  return v < 0.25 ? 0 : v < 0.5 ? 1 : v < 0.75 ? 2 : 3
-}
-export function gradeKey(v)  { return GRADE_KEYS[gradeIndex(v)] }
-export function gradeLabel(v) { return GRADES[gradeIndex(v)] }
-export function gradeColor(v) { return STANDING[gradeKey(v)] }
-
-// Where inside its band a value sits — early / mid / late. Lets the
-// read say "Solid, late" without inventing more bands.
-export function bandPos(v) {
-  const within = (v - BOUNDS[gradeIndex(v)]) / 0.25
-  return within < 0.34 ? 'early' : within < 0.67 ? 'mid' : 'late'
+// A gentle low→high colour, no red. Muted grey at 0 climbing to brand
+// blue at 10, so a higher read simply looks more alive.
+export function scoreColor(v) {
+  const t = Math.max(0, Math.min(1, v ?? 0))
+  const mix = (a, b) => Math.round(a + (b - a) * t)
+  return `rgb(${mix(176, 19)}, ${mix(176, 156)}, ${mix(182, 221)})`
 }
 
-// The gap between now and headed, in grades — the quarter's training.
-// Positive = grades to climb; 0 = same band; negative = easing off.
-export function gradeGap(nowV, headedV) {
-  return gradeIndex(headedV) - gradeIndex(nowV)
-}
+// The gap to the target, in points — the quarter's training.
 export function gapLabel(nowV, headedV) {
-  const j = gradeGap(nowV, headedV)
-  if (j > 0) return `${j} grade${j > 1 ? 's' : ''} to train`
-  if (j === 0) return 'same band'
+  const j = score10(headedV) - score10(nowV)
+  if (j > 0) return `+${j} to train`
+  if (j === 0) return 'on target'
   return 'easing off'
 }
 
