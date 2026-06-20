@@ -4,7 +4,8 @@
 // hasn't been onboarded sees Onboarding before the rooms. Env not set →
 // a plain white message instead of a crash, so the deploy still serves.
 // ─────────────────────────────────────────────────────────────
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { tokens, sans } from './lib/tokens'
 import { supabaseConfigured } from './lib/supabase'
 import { useSession } from './hooks/useSession'
@@ -27,18 +28,31 @@ function Centered({ children }) {
   )
 }
 
+// On the very first entry after onboarding, send them into the You room so
+// they actually do the scouting, then step out of the way for good.
+function FirstRunGate({ active, clear }) {
+  const nav = useNavigate()
+  useEffect(() => {
+    if (active) { nav('/scout', { replace: true }); clear() }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  return null
+}
+
 function Authed({ userId }) {
   const { game, loading, save, reload } = useGame(userId)
+  const [firstRun, setFirstRun] = useState(false)
 
   if (loading) {
     return <Centered><p style={{ color: tokens.ink3, fontSize: 15 }}>Lining you up&hellip;</p></Centered>
   }
   if (game && !game.onboarded) {
-    return <Onboarding save={save} onDone={reload} />
+    return <Onboarding save={save} onDone={() => { setFirstRun(true); reload() }} />
   }
 
   return (
     <BrowserRouter>
+      <FirstRunGate active={firstRun} clear={() => setFirstRun(false)} />
       <div style={{ minHeight: '100dvh', background: tokens.bg, color: tokens.ink, ...sans, display: 'flex', flexDirection: 'column' }}>
         <div style={{ flex: 1 }}>
           <Routes>

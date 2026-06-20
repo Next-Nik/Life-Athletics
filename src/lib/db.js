@@ -32,23 +32,14 @@ import { AREAS } from './areas'
 
 // ── practices ───────────────────────────────────────────────────
 export async function ensureMoneyMoves(userId) {
-  const { data: found } = await supabase
+  // Money Moves isn't a settled tool yet, so it must not be locked onto
+  // anyone's day. Don't seed it; if an old active one exists, switch it off.
+  // (The row is left in place, just inactive, so nothing is lost.)
+  await supabase
     .from('la_practices')
-    .select('*')
-    .eq('user_id', userId).eq('area', 'money').eq('label', 'Money Moves')
-    .maybeSingle()
-  if (found) return found
-
-  const row = {
-    user_id: userId,
-    area: MONEY_MOVES.area, shape: MONEY_MOVES.shape, label: MONEY_MOVES.label, ask: MONEY_MOVES.ask,
-    run_mode: MONEY_MOVES.runMode, log_type: MONEY_MOVES.logType, source: MONEY_MOVES.source,
-    entrance: MONEY_MOVES.entrance, cadence: MONEY_MOVES.cadence, config: MONEY_MOVES.config,
-    position: 0, active: true,
-  }
-  const { data, error } = await supabase.from('la_practices').insert(row).select().single()
-  if (error) throw error
-  return data
+    .update({ active: false })
+    .eq('user_id', userId).eq('area', 'money').eq('label', 'Money Moves').eq('active', true)
+  return null
 }
 
 export async function loadPractices(userId) {

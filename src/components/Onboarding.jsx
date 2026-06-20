@@ -70,7 +70,7 @@ export default function Onboarding({ onDone, save }) {
           placeholder="e.g. Strong, free, and present — building something that lasts."
           style={{ width: '100%', marginTop: 18, ...sans, fontSize: 17, lineHeight: 1.5, color: tokens.ink, background: '#fff', border: `1px solid ${tokens.line}`, borderRadius: 14, padding: '15px 16px', outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
         />
-        <button onClick={finish} disabled={busy} style={cta()}>Start scouting</button>
+        <button onClick={finish} disabled={busy} style={cta()}>See where I stand</button>
         <button onClick={finish} disabled={busy} style={{ ...sans, fontSize: 13, color: tokens.ink3, background: 'none', border: 'none', cursor: 'pointer', display: 'block', margin: '14px auto 0' }}>Skip for now</button>
       </Shell>
     )
