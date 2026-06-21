@@ -1,0 +1,13 @@
+{
+  "name": "Life Athletics",
+  "short_name": "Life Athletics",
+  "description": "A precision training instrument for the life you actually want.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#E6E1D6",
+  "theme_color": "#E6E1D6",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
