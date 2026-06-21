@@ -12,6 +12,8 @@ import { useGame } from './hooks/useGame'
 import Nav from './components/Nav'
 import Wordmark from './components/Wordmark'
 import Onboarding from './components/Onboarding'
+import Login from './pages/Login'
+import AuthCallback from './pages/AuthCallback'
 import Today from './pages/Today'
 import Scout from './pages/Scout'
 import Progress from './pages/Progress'
@@ -74,6 +76,9 @@ export default function App() {
       </Centered>
     )
   }
+  if (typeof window !== 'undefined' && window.location.pathname === '/auth/callback') {
+    return <AuthCallback />
+  }
   if (loading) {
     return <Centered><p style={{ color: tokens.ink3, fontSize: 15 }}>Lining you up&hellip;</p></Centered>
   }
@@ -89,7 +94,7 @@ export default function App() {
     )
   }
   if (!user) {
-    return <Centered><p style={{ color: tokens.ink3, fontSize: 15 }}>Lining you up&hellip;</p></Centered>
+    return <Login />
   }
 
   return <Authed userId={user.id} />
