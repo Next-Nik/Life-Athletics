@@ -1,8 +1,9 @@
 // ─────────────────────────────────────────────────────────────
-// App.jsx — the shell. White ground, the mark, three rooms.
-// Gates on the Supabase session, then on the front door: a user who
-// hasn't been onboarded sees Onboarding before the rooms. Env not set →
-// a plain white message instead of a crash, so the deploy still serves.
+// App.jsx — the shell. Warm ground, the mark, three rooms.
+// Gates on the Supabase session: no session → the Login screen
+// (Google · email · guest). Signed in → straight into the rooms, no
+// onboarding gate. Env not set → a plain message instead of a crash,
+// so the deploy still serves.
 // ─────────────────────────────────────────────────────────────
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { tokens, sans } from './lib/tokens'
@@ -11,7 +12,6 @@ import { useSession } from './hooks/useSession'
 import { useGame } from './hooks/useGame'
 import Nav from './components/Nav'
 import Wordmark from './components/Wordmark'
-import Onboarding from './components/Onboarding'
 import Login from './pages/Login'
 import AuthCallback from './pages/AuthCallback'
 import Today from './pages/Today'
@@ -30,20 +30,12 @@ function Centered({ children }) {
 }
 
 function Authed({ userId }) {
-  const { game, loading, save, reload } = useGame(userId)
+  // No onboarding gate — after auth you land straight in the app.
+  // (useGame still runs so the time-ladder state exists.)
+  const { loading } = useGame(userId)
 
   if (loading) {
     return <Centered><p style={{ color: tokens.ink3, fontSize: 15 }}>Lining you up&hellip;</p></Centered>
-  }
-  if (game && !game.onboarded) {
-    // Finishing onboarding sets the address to the scouting room *before* the
-    // rooms mount, so the wheel is the first thing they land on — no flash.
-    return (
-      <Onboarding
-        save={save}
-        onDone={() => { try { window.history.replaceState(null, '', '/scout') } catch (e) {} reload() }}
-      />
-    )
   }
 
   return (
