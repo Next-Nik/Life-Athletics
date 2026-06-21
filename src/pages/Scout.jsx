@@ -89,9 +89,9 @@ export default function Scout({ userId }) {
         <Wordmark font={16} />
         <div style={{ ...sans, fontWeight: 600, fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: tokens.ink3 }}>You</div>
       </div>
-      <h1 style={{ ...display, fontSize: 30, margin: '24px 0 6px', letterSpacing: '-0.01em' }}>Where things stand</h1>
-      <p style={{ fontSize: 14, color: tokens.ink2, lineHeight: 1.5, marginBottom: 20 }}>
-        Nine parts of your life, at a glance. Blue is where you are, gold is where you want to be. Tap any area to read it, set the markers, and train its practices.
+      <h1 style={{ ...display, fontSize: 31, margin: '24px 0 6px' }}>Where you stand</h1>
+      <p style={{ ...sans, fontSize: 14, color: tokens.ink2, lineHeight: 1.5, marginBottom: 20 }}>
+        Nine parts of the life, at a glance. Dark is now, gold is where you're headed, and the centre lights as you climb. Tap any area to read it, set the markers, and train it.
       </p>
       {err && <p style={{ fontSize: 13, color: tokens.gold }}>Something went wrong. {err}</p>}
       {!scouting && !err && <p style={{ color: tokens.ink3, fontSize: 15 }}>Reading your game…</p>}
